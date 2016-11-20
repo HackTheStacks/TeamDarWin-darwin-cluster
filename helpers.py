@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 
 
-def downsample(frame, chunk_size=5):
+def downsample(frame, n_chunks=100):
     n_points = frame.shape[0]
-    n_chunks = int(n_points / chunk_size)  # TODO: We are throwing away any the last chunk if it doesn't fit.
+    chunk_size = int(n_points / n_chunks)  # TODO: We are throwing away any the last chunk if it doesn't fit.
 
     edge_frame = pd.DataFrame(frame, columns=["x", "y"])
     downsampled = pd.DataFrame(columns=frame.columns)
