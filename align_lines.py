@@ -5,13 +5,11 @@ from sklearn.metrics.pairwise import euclidean_distances
 import json
 from itertools import groupby
 
-EUCL_NOSAMPLES = 1000
 SMOOTHING_FACTOR = 30
+EUCL_NDPS = 3
 
-def downsample(frame, n_chunks= 10**EUCL_NDPS):
-    n_points = frame.shape[0]
-    chunk_size = int(n_points / n_chunks)  # TODO: We are throwing away any the last chunk if it doesn't fit.
-    meansdict = {np.round(k,3):np.mean([i[0,1] for i in g]) for k,g in groupby(frame, (lambda x: np.round(x[0,0], EUCL_NDPS)))}
+def downsample(frame, n_chunks=10**EUCL_NDPS):
+    meansdict = {np.round(k,EUCL_NDPS):np.mean([i[0,1] for i in g]) for k,g in groupby(frame, (lambda x: np.round(x[0,0], EUCL_NDPS)))}
     Y = np.zeros(1000)
     for key in meansdict:
         Y[key*1000-1] = meansdict[key]
