@@ -78,3 +78,4 @@ def save_to_json(closest_friends,save_path):
 if __name__ == "__main__":
     stacked_lines,filenames = get_aligned_lines(sys.argv[1])
     closest_friends = get_distances(stacked_lines,filenames,num_matches=10)
+    save_to_json(closest_friends, sys.argv[2])
