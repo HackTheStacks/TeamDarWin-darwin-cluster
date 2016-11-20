@@ -44,20 +44,32 @@ def get_aligneddata(filename):
     aligned_data = axis_align(inputcsv)
     return aligned_data
 
-def main_fn(csv_folder_loc):
-	yvalues = []
+def get_aligned_lines(csv_folder_loc):
+    yvalues = []
     filenames = []
-	for csvfile in os.listdir(csv_folder_loc):
-	    name = os.path.join(csv_folder_loc,csvfile)
-	    y = get_aligneddata(name)
-	    y = downsample(y)
-	    y[np.isnan(y)] = 0
-	    yvalues.append(np.array(y[:,1]))
+    for csvfile in os.listdir(csv_folder_loc):
+        name = os.path.join(csv_folder_loc,csvfile)
+        y = get_aligneddata(name)
+        y = downsample(y)
+        y[np.isnan(y)] = 0
+        yvalues.append(np.array(y[:,1]))
         filenames.append(csvfile)
-	yvalues.append(np.zeros(1000))
-	return np.vstack(yvalues),filenames
+    #TODO: zero value append add it back when we have k-means
+    #yvalues.append(np.zeros(1000))
+    stacked_lines = np.vstack(yvalues)
+    return stacked_lines,filenames
 
-
+def get_distances(stacked_lines,filenames,num_matches=10):
+    closest_friends=[]
+    dist_matrix = euclidean_distances(stacked_lines)
+    for i,filename in zip(dist_matrix,filenames):
+        zipped = list(zip(i,filenames))
+        zipped.sort(key=lambda tup: tup[0])
+        top_matches = zipped[1:num_matches+1]
+        top_matches = [z[1] for z in top_matches]
+        closest_friends.append((filename,top_matches))
+    return closest_friends
 
 if __name__ == "__main__":
-	main_fn(sys.argv[1])
+	stacked_lines,filenames = get_aligned_lines(sys.argv[1])
+    get_distances(stacked_lines,filenames,num_matches=10)
