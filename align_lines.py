@@ -2,7 +2,7 @@ import os
 import numpy as np
 import sys
 from sklearn.metrics.pairwise import euclidean_distances
-import pandas as pd
+import json
 
 EUCL_NOSAMPLES = 1000
 SMOOTHING_FACTOR = 30
@@ -72,4 +72,6 @@ def get_distances(stacked_lines,filenames,num_matches=10):
 
 if __name__ == "__main__":
 	stacked_lines,filenames = get_aligned_lines(sys.argv[1])
-    get_distances(stacked_lines,filenames,num_matches=10)
+    closest_friends = get_distances(stacked_lines,filenames,num_matches=10)
+    with open('data.txt', 'w') as outfile:
+        json.dump(closest_friends, outfile)
