@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import helpers
+import sys
 from sklearn.cluster import KMeans
 
 FEAT_TRANSFORM = {
@@ -10,7 +11,6 @@ FEAT_TRANSFORM = {
 
 DATA_DIR = 'sample_csv'
 OUT_FILE = './clusters.csv'
-
 N_CLUSTERS = 5
 
 
@@ -58,5 +58,6 @@ def get_cols_from_frame(in_frame):
 
 
 if __name__ == '__main__':
-    input_dir = './%s' % DATA_DIR
-    cluster_edges(input_dir, OUT_FILE)
+    input_dir = './%s' % sys.argv[1]
+    output_file = sys.argv[2]
+    cluster_edges(input_dir, output_file)
