@@ -36,4 +36,11 @@ def axis_align(inputdata):
 
     newdata = translateddata * rotationmatrix
 
+    scalefactor = newdata[-1, 0]
+    newdata[:, 0] = newdata[:, 0] / scalefactor
+
     return newdata
+
+
+def axis_align_pandas(frame):
+    return pd.DataFrame(axis_align(frame.as_matrix()), columns=frame.columns)
