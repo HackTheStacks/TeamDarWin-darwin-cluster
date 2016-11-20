@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 def downsample(frame, chunk_size=5):
@@ -16,3 +17,23 @@ def downsample(frame, chunk_size=5):
         downsampled = downsampled.append(chunk_avg, ignore_index=True)
         ii += 1
     return downsampled
+
+
+def axis_align(inputdata):
+    # Translate leftermost point to the origin
+    translateddata = inputdata - inputdata[0]
+
+    # Find an assumed "straight edge" line:
+    # straight line between first and last points
+    leftpoint = translateddata[0]
+    rightpoint = translateddata[-1]
+    slope = (rightpoint[1] - leftpoint[1]) / (rightpoint[0] - leftpoint[0])
+
+    # NOTE: can we get c,s more smartly?
+    theta = np.arctan(slope)
+    c, s = np.cos(theta), np.sin(theta)
+    rotationmatrix = np.matrix('{} {}; {} {}'.format(c, -s, s, c))
+
+    newdata = translateddata * rotationmatrix
+
+    return newdata
