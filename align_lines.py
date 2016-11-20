@@ -3,18 +3,20 @@ import numpy as np
 import sys
 from sklearn.metrics.pairwise import euclidean_distances
 import json
+from itertools import groupby
 
 EUCL_NOSAMPLES = 1000
 SMOOTHING_FACTOR = 30
 
-def downsample(frame, n_chunks=EUCL_NOSAMPLES):
+def downsample(frame, n_chunks= 10**EUCL_NDPS):
     n_points = frame.shape[0]
     chunk_size = int(n_points / n_chunks)  # TODO: We are throwing away any the last chunk if it doesn't fit.
-    X = np.arange(0,1,1/n_chunks)
-    i=20
-    Y = [np.mean(frame[:,1][np.multiply((i/n_chunks <= frame[:,0]),(frame[:,0] < (i+1)/n_chunks))]) for i in range(n_chunks)]
-    downsampled = np.array([X,Y]).T
-    return downsampled
+    meansdict = {np.round(k,3):np.mean([i[0,1] for i in g]) for k,g in groupby(frame, (lambda x: np.round(x[0,0], EUCL_NDPS)))}
+    Y = np.zeros(1000)
+    for key in meansdict:
+        Y[key*1000-1] = meansdict[key]
+
+    return Y
 
 def axis_align(inputdata):
     # Translate leftermost point to the origin
@@ -25,7 +27,6 @@ def axis_align(inputdata):
     leftpoint = translateddata[0]
     rightpoint = translateddata[-1]
     slope = (rightpoint[1] - leftpoint[1]) / (rightpoint[0] - leftpoint[0])
-    
     # NOTE: can we get c,s more smartly?
     theta = np.arctan(slope)
     c, s = np.cos(theta), np.sin(theta)
@@ -73,7 +74,6 @@ def get_distances(stacked_lines,filenames,num_matches=10):
 def save_to_json(closest_friends,save_path):
     with open(save_path, 'w') as outfile:
         json.dump(closest_friends, outfile)
-
 
 if __name__ == "__main__":
     stacked_lines,filenames = get_aligned_lines(sys.argv[1])
