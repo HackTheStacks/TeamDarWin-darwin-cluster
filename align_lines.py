@@ -70,8 +70,11 @@ def get_distances(stacked_lines,filenames,num_matches=10):
         closest_friends.append((filename,top_matches))
     return closest_friends
 
+def save_to_json(closest_friends,save_path):
+    with open(save_path, 'w') as outfile:
+        json.dump(closest_friends, outfile)
+
+
 if __name__ == "__main__":
 	stacked_lines,filenames = get_aligned_lines(sys.argv[1])
     closest_friends = get_distances(stacked_lines,filenames,num_matches=10)
-    with open('data.txt', 'w') as outfile:
-        json.dump(closest_friends, outfile)
