@@ -4,7 +4,7 @@ This repo contains the machine learning functions for the [AMNH Hack the Stacks]
 
 >Darwin was in the habit of frequently reorganizing his notes according to the topics that particularly interested him at a given time. This meant, for example, that a page of observations made in 1840 on bees visiting flowers might, in 1850, have been torn apart or cut up into two pieces and each piece put into a separate topical portfolio. One portfolio could be devoted to the behavior of bees and the other to the anatomy of flowers. In an age of only literal cutting and pasting, this was an important way for Darwin to shuffle and organize his thoughts and his observations.
 
-The overall project won *Most Original Hack* during the competition. A link to the challenge description can be found [here](https://github.com/amnh/HackTheStacks/wiki/The-Evolution-of-Darwin's-Notes).
+The overall project won *Most Original Hack* during the competition. A link to the original challenge description can be found [here](https://github.com/amnh/HackTheStacks/wiki/The-Evolution-of-Darwin's-Notes).
 
 ## Overview
 
