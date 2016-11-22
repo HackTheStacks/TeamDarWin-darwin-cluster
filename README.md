@@ -1,6 +1,8 @@
-# Darwin Notes Reconstruction
+# Evolution of Darwin's Notes Reconstruction
 
-This repo contains the machine learning functions for the AMNH Hack the Stacks challenge by team DarWin.
+This repo contains the machine learning functions for the [AMNH Hack the Stacks](http://www.amnh.org/learn-teach/adults/bridgeup-stem/hackathon) challenge by team DarWin.
+
+The overall project won *Most Original Hack* at the hackathon, which took place the weekend of November 18, 2016. A link to the original challenge description can be found [here](https://github.com/amnh/HackTheStacks/wiki/The-Evolution-of-Darwin's-Notes).
 
 ## Overview
 
