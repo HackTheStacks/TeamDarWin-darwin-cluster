@@ -1,7 +1,0 @@
-sklearn
-numpy
-tqdm
-os
-sys
-json
-itertools

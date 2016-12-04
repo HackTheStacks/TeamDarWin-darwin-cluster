@@ -10,16 +10,25 @@ SMOOTHING_FACTOR = 30
 EUCL_NDPS = 3
 
 def downsample(frame, n_chunks=10**EUCL_NDPS):
-    meansdict = {np.round(k,EUCL_NDPS):np.mean([i[0,1] for i in g]) for k,g in groupby(frame, (lambda x: np.round(x[0,0], EUCL_NDPS)))}
+    meansdict = {np.round(k,EUCL_NDPS):np.mean([i[0,1] for i in g])
+                for k,g in
+                groupby(frame, (lambda x: np.round(x[0,0], EUCL_NDPS)))}
     Y = np.zeros(1000)
     for key in meansdict:
         Y[key*1000-1] = meansdict[key]
 
     return Y
 
-def axis_align(inputdata):
+def axis_align(rawcsv:np.array):
+    """Inputs: rawcsv: a numpy array containing numerical csv data
+
+    Outputs: 1d numpy array containing normalised points:
+            - rotated to the x-axis
+            - scaled to [0,1] horizontal (optional)
+            - TODO: vertical scaling?
+    """
     # Translate leftermost point to the origin
-    translateddata = inputdata - inputdata[0]
+    translateddata = rawcsv - rawcsv[0]
 
     # Find an assumed "straight edge" line:
     # straight line between first and last points
@@ -37,19 +46,33 @@ def axis_align(inputdata):
 
     return newdata
 
-def get_aligneddata(filename):
+def get_aligned_data(filename):
+    """Takes a filename containing raw edge data in csv format
+    Runs the "axis_align" function
+    Returns a numpy array containing normalised edge data
+    """
     inputcsv = np.genfromtxt(filename, delimiter=',')
     inputcsv.sort(0)
     aligned_data = axis_align(inputcsv)
     return aligned_data
 
+def filter_zero_files(csv_folder_loc):
+    """"""
+    tqdm(os.listdir(csv_folder_loc))
+    return os.path.getsize(os.path.join(csv_folder_loc,csvfile)) > 0:
+
 def get_aligned_lines(csv_folder_loc):
     yvalues = []
     filenames = []
+
+    """Read files from the given folder"""
     for csvfile in tqdm(os.listdir(csv_folder_loc)):
         if os.path.getsize(os.path.join(csv_folder_loc,csvfile)) > 0:
             name = os.path.join(csv_folder_loc,csvfile)
-            y = get_aligneddata(name)
+
+            """For each file, call get_aligned_data to process the data
+            contained in the file."""
+            y = get_aligned_data(name)
             y = downsample(y)
             y[np.isnan(y)] = 0
             yvalues.append(np.array(y))
