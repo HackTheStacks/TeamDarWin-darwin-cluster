@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import os
 import numpy as np
 import sys
@@ -5,13 +6,11 @@ from sklearn.metrics.pairwise import euclidean_distances
 import json
 from itertools import groupby
 
-EUCL_NOSAMPLES = 1000
 SMOOTHING_FACTOR = 30
+EUCL_NDPS = 3
 
-def downsample(frame, n_chunks= 10**EUCL_NDPS):
-    n_points = frame.shape[0]
-    chunk_size = int(n_points / n_chunks)  # TODO: We are throwing away any the last chunk if it doesn't fit.
-    meansdict = {np.round(k,3):np.mean([i[0,1] for i in g]) for k,g in groupby(frame, (lambda x: np.round(x[0,0], EUCL_NDPS)))}
+def downsample(frame, n_chunks=10**EUCL_NDPS):
+    meansdict = {np.round(k,EUCL_NDPS):np.mean([i[0,1] for i in g]) for k,g in groupby(frame, (lambda x: np.round(x[0,0], EUCL_NDPS)))}
     Y = np.zeros(1000)
     for key in meansdict:
         Y[key*1000-1] = meansdict[key]
@@ -21,8 +20,8 @@ def downsample(frame, n_chunks= 10**EUCL_NDPS):
 def axis_align(inputdata):
     # Translate leftermost point to the origin
     translateddata = inputdata - inputdata[0]
-   
-    # Find an assumed "straight edge" line: 
+
+    # Find an assumed "straight edge" line:
     # straight line between first and last points
     leftpoint = translateddata[0]
     rightpoint = translateddata[-1]
@@ -31,16 +30,15 @@ def axis_align(inputdata):
     theta = np.arctan(slope)
     c, s = np.cos(theta), np.sin(theta)
     rotationmatrix = np.matrix('{} {}; {} {}'.format(c, -s, s, c))
-    
+
     newdata =  translateddata * rotationmatrix
     scalefactor = newdata[-1,0]
     newdata[:,0] = newdata[:,0] / scalefactor
-    
+
     return newdata
 
 def get_aligneddata(filename):
     inputcsv = np.genfromtxt(filename, delimiter=',')
-    inputcsv = inputcsv[1:,(1,2)]
     inputcsv.sort(0)
     aligned_data = axis_align(inputcsv)
     return aligned_data
@@ -48,13 +46,14 @@ def get_aligneddata(filename):
 def get_aligned_lines(csv_folder_loc):
     yvalues = []
     filenames = []
-    for csvfile in os.listdir(csv_folder_loc):
-        name = os.path.join(csv_folder_loc,csvfile)
-        y = get_aligneddata(name)
-        y = downsample(y)
-        y[np.isnan(y)] = 0
-        yvalues.append(np.array(y[:,1]))
-        filenames.append(csvfile)
+    for csvfile in tqdm(os.listdir(csv_folder_loc)):
+        if os.path.getsize(os.path.join(csv_folder_loc,csvfile)) > 0:
+            name = os.path.join(csv_folder_loc,csvfile)
+            y = get_aligneddata(name)
+            y = downsample(y)
+            y[np.isnan(y)] = 0
+            yvalues.append(np.array(y))
+            filenames.append(csvfile)
     #TODO: zero value append add it back when we have k-means
     #yvalues.append(np.zeros(1000))
     stacked_lines = np.vstack(yvalues)

@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import helpers
+import sys
 from sklearn.cluster import KMeans
 
 FEAT_TRANSFORM = {
@@ -10,7 +11,6 @@ FEAT_TRANSFORM = {
 
 DATA_DIR = 'sample_csv'
 OUT_FILE = './clusters.csv'
-
 N_CLUSTERS = 5
 
 
@@ -19,8 +19,11 @@ def cluster_edges(input_dir, output_file):
 
     edges = []
     for file_name in file_names:
-        edge = helpers.axis_align_pandas(load_edge(file_name).sort_values(by='x'))
-        edges.append(edge)
+        edge = load_edge(file_name)
+        if edge.shape[0] == 0:
+            continue
+        axis_aligned = helpers.axis_align_pandas(edge.sort_values(by='x'))
+        edges.append(axis_aligned)
 
     downsampled_edges = []
     for edge in edges:
@@ -32,7 +35,7 @@ def cluster_edges(input_dir, output_file):
     for edge in downsampled_edges:
         total_frame = total_frame.append(frame_to_row(edge), ignore_index=True)
 
-    kmeans = KMeans(N_CLUSTERS)
+    kmeans = KMeans(N_CLUSTERS, n_jobs=-1)
     kmeans.fit(total_frame)
     clusters = kmeans.predict(total_frame)
     pd.DataFrame({
@@ -58,5 +61,6 @@ def get_cols_from_frame(in_frame):
 
 
 if __name__ == '__main__':
-    input_dir = './%s' % DATA_DIR
-    cluster_edges(input_dir, OUT_FILE)
+    input_dir = './%s' % sys.argv[1]
+    output_file = sys.argv[2]
+    cluster_edges(input_dir, output_file)
