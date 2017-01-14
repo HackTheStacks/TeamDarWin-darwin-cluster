@@ -28,8 +28,8 @@
 
 # Specific files
 ################
-fuzziness_of_edges.csv
-
+*fuzziness_of_edges.csv
+*file_identifiers.csv
 
 # OS generated files #
 ######################
