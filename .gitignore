@@ -25,7 +25,11 @@
 *.log
 *.sql
 *.sqlite
-*.csv
+
+# Specific files
+################
+fuzziness_of_edges.csv
+
 
 # OS generated files #
 ######################
