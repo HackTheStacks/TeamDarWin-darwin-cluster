@@ -2,7 +2,7 @@ Sample generation
 =================
 Select a random sample of 100 of the 35k image files and download them. Assumes "images" and "image_csvs" directories.
 
-The current (3:45p December 4th, 2016) /data/amnh/darwin/samples folder was created by running "sample_images.py" as of commit ### on a different machine and scp the results to the server. Subsequent modifications have not been tested, but should make the script runnable on the server and keep a log of which images and csvs were found.
+The current (3:45p December 4th, 2016) /data/amnh/darwin/samples folder was created by running "sample_images.py" on a different machine and scp the results to the server. Subsequent modifications have not been tested, but should make the script runnable on the server and keep a log of which images and csvs were found.
 
 Sample labeling
 ===============
@@ -17,10 +17,3 @@ fullpage: ("1"|"0") Whether the page appears to be a full page and therefore no 
 text: (0|0.5|1) 0 if the page is blank, 0.5 if there is some text on the page, 1 if the page is full of text
 notes: (string) Interesting notes about the file
 color: ('na'|'blue'|'yellow'|empty) The rough color of the paper
-
-Todo
-====
-- Validate ruler consistency and scaling outputs
-- Color
-- Cases degenerate edges
-- Do front/back pairs consistently have blank backs?
