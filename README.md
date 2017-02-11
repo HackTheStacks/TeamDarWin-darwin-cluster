@@ -15,3 +15,5 @@ The overall project won *Most Original Hack* during the competition, which took 
 ## Todo
 + Validate ruler consistency and scaling outputs
 + [Use paper color to match fragments](https://github.com/HackTheStacks/darwin-notes-image-processing/blob/master/IPythonNotesbooks/AutoEncoder-Images.ipynb)
++ Make script to test whether an algorithm correctly predicts the known matches
++ Talk to David about server resources
